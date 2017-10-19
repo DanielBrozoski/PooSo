@@ -6,17 +6,23 @@ public class Buffer {
 
 	public Buffer(int pos_vec) {
 		this.pos_vec = pos_vec;
-
 		this.buffer = new int[pos_vec];
 
 	}
 
-	public int insereIndice(int pid) {
+	public int buscaIndice() {
 		for (int i = 0; i < pos_vec; i++) {
 			if (buffer[i] == 0) {
-				buffer[i] = pid;
 				return i;
 			}
+		}
+		return -1;
+	}
+
+	public int insereIndice(int pid, int indice) {
+		if (buffer[indice] == 0) {
+			buffer[indice] = pid;
+			return 1;
 		}
 		return -1;
 
@@ -24,9 +30,10 @@ public class Buffer {
 
 	public int removeIndice(int pid) {
 		for (int i = 0; i < pos_vec; i++) {
-			if(buffer[i] == pid)
+			if (buffer[i] == pid) {
 				buffer[i] = 0;
-				return i; 
+				return i;
+			}
 		}
 		return -1;
 	}
@@ -36,5 +43,13 @@ public class Buffer {
 			if (buffer[i] == 0)
 				System.out.println("-" + this.buffer[i]);
 		}
+	}
+
+	public void resume() {
+		System.out.println("----------------------------------");
+		for (int i : buffer) {
+			System.out.println(i);
+		}
+		System.out.println("----------------------------------");
 	}
 }

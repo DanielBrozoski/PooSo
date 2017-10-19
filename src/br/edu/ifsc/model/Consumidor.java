@@ -11,33 +11,32 @@ public class Consumidor implements Runnable {
 	}
 
 	public void notifica() {
-		this.dormindo = !dormindo;
+		this.dormindo = !(this.dormindo);
 	}
 
 	public void run() {
 		while (true) {
-			
-				while(dormindo) {
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				System.out.println("I'm sleeping" + pid);
+
+			while (dormindo) {
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			
-				//wait(3332);
-			
+				 System.out.println("I'm sleeping " + pid + " " + dormindo);
+			}
+
 			int indiceVetor = buffer.removeIndice(this.pid);
 			if (indiceVetor != -1) {
-				System.out.println("Eu " + pid + " li da posicao " + indiceVetor + " do vetor!");
 				this.notifica();
+				System.out.println("Eu " + pid + " li da posicao " + indiceVetor + " do buffer! " + dormindo);
 			} else {
-				System.out.println("I'm sleeping" + pid + "q");
-			}}
+				System.err.println("I'm sleeping " + pid + ", me enganaram");
+				buffer.resume();
+				System.exit(1);
+			}
 		}
+	}
 
 }
-
-
