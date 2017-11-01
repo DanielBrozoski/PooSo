@@ -1,0 +1,37 @@
+.root{
+  -fx-font-family: "Purisa", "Tahoma", "System";
+  -fx-font-size: 12pt;
+  -fx-base: #999999;
+  -fx-background: #cccccc;
+  -fx-focus-color: #000000;
+}
+
+.titulo{
+  -fx-font-size: 20pt;
+  -fx-font-family: "Purisa", "Comic Sans MS", "System";
+  -fx-text-fill: red;
+}
+
+.menu-item, .menu-button{
+  -fx-cursor: hand;
+}
+
+.text-field{
+  -fx-font-size: 14pt;
+  -fx-alignment:center;
+  -fx-max-width: 350;
+}
+
+.button{
+  -fx-text-fill: black;
+  -fx-font-weight: bold;
+  -fx-border-color: #000000;
+  -fx-border-radius: 5;
+  -fx-cursor: hand;
+}
+
+VBox{
+  -fx-alignment: top-center;
+  -fx-spacing: 20;
+  -fx-padding: 30;
+}
