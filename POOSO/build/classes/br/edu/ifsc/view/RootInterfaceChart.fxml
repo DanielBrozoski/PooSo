@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" stylesheets="@../main/main.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ifsc.view.ControladorRootInterfaceChart">
+<AnchorPane stylesheets="@../main/main.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ifsc.view.ControladorRootInterfaceChart">
    <children>
-      <VBox layoutX="10.0" layoutY="10.0" minWidth="400.0" prefHeight="600.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <AreaChart fx:id="chartBuffer" animated="false" nodeOrientation="LEFT_TO_RIGHT" title="Uso do Buffer">
                <xAxis>
@@ -31,20 +31,17 @@
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="lblBufferUsado" text="0" GridPane.columnIndex="1" />
-                  <Label text="Label" />
-                  <Label text="Soneca" GridPane.rowIndex="1" />
-                  <Label text="Produtor" GridPane.rowIndex="2" />
-                  <Label text="Consumidor" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label fx:id="lblProdutor" text="0" GridPane.rowIndex="3" />
-                  <Label fx:id="lblConsumidor" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label text="Soneca" />
+                  <Label text="Produtor" GridPane.rowIndex="1" />
+                  <Label text="Consumidor" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="lblProdutor" text="0" GridPane.rowIndex="2" />
+                  <Label fx:id="lblConsumidor" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
-            <Button mnemonicParsing="false" onAction="#parar" text="Stop" />
+            <Button fx:id="btnStop" mnemonicParsing="false" onAction="#parar" text="Stop" />
          </children>
       </VBox>
    </children>

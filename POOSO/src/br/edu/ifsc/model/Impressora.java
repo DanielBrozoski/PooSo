@@ -5,29 +5,15 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import br.edu.ifsc.interfaces.DriverImpressora;
 import br.edu.ifsc.view.ControladorRootInterface;
-import br.edu.ifsc.view.ControladorRootInterfaceChart;
 
 public class Impressora implements DriverImpressora {
 
     private ControladorRootInterface controladorRootInterface;
-    private ControladorRootInterfaceChart controladorRootInterfaceChart;
     private Lock lock;
 
-    public Impressora(ControladorRootInterface controladorRootInterface,
-            ControladorRootInterfaceChart controladorRootInterfaceChart) {
+    public Impressora(ControladorRootInterface controladorRootInterface) {
         this.controladorRootInterface = controladorRootInterface;
-        this.controladorRootInterfaceChart = controladorRootInterfaceChart;
         this.lock = new ReentrantLock();
-    }
-
-    @Override
-    public void imprimirUsoBuffer(int valor) {
-        this.lock.lock();
-        try {
-            this.controladorRootInterfaceChart.atualizarUsoBuffer(valor);
-        } finally {
-            this.lock.unlock();
-        }
     }
 
     @Override
@@ -40,16 +26,6 @@ public class Impressora implements DriverImpressora {
         }
         try {
             this.controladorRootInterface.printarProducao(texto);
-        } finally {
-            this.lock.unlock();
-        }
-    }
-
-    @Override
-    public void imprimirEstadoBuffer(String texto) {
-        this.lock.lock();
-
-        try {
         } finally {
             this.lock.unlock();
         }

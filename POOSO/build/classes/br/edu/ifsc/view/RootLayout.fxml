@@ -13,7 +13,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Arquivo">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#iniciarRootMenu" text="Novo">
+              <MenuItem mnemonicParsing="false" onAction="#iniciarNovo" text="Novo">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>

@@ -2,24 +2,28 @@ package br.edu.ifsc.view;
 
 import br.edu.ifsc.main.Main;
 import br.edu.ifsc.model.AddToQueue;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-//import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 public class ControladorRootInterfaceChart {
 
     @FXML
-    private AreaChart<String, Double> chartBuffer;
-
+    private AreaChart<String, Number> chartBuffer;
+    
     @FXML
-    private Label lblBufferUsado;
-	
+    private Button btnStop;
+
     @FXML
     private Label lblProdutor;
 
@@ -29,78 +33,88 @@ public class ControladorRootInterfaceChart {
     private NumberAxis xAxis;
     private NumberAxis yAxis;
     
+    private AnimationTimer animationTimer;
     private Series series;
     private ExecutorService executor;
     private AddToQueue addToQueue;
-    private int xData;
+    private SimpleDateFormat horaFormatada;
+    private Date data;
     
-//    XYChart.Series<String, Double> seriesBuffer;
     private int contadorLinhas;
     private Main main;
 
-    public void iniciar(Main main, int tamanhoBuffer) {
+    public void iniciar(Main main, int tamanhoBuffer, AddToQueue addToQueue) {//, AddToQueue addToQueue
+        this.chartBuffer.setAnimated(false);
         this.main = main;
-        this.xAxis = new NumberAxis();
-        this.yAxis = new NumberAxis();//1, tamanhoBuffer, 1
-         //-- add 20 numbers to the plot+
-//        this.series = new AreaChart.Series<Number, Number>();
+        
+        this.xAxis = new NumberAxis(1, 20, 1);
+        this.xAxis.setTickLabelsVisible(false);
+        this.yAxis = new NumberAxis(1, tamanhoBuffer, tamanhoBuffer/5);
+        this.yAxis.setForceZeroInRange(true);
+        this.yAxis.setAutoRanging(false);
+        
         this.series = new AreaChart.Series();
-//        this.series.setName("Buffer series");
+        this.series.setName("Buffer");
         this.chartBuffer.getData().add(series);
         this.executor = Executors.newCachedThreadPool();
-//            new ThreadFactory {
-//            @Override
-//            public Thread newThread(Runnable runnable) {
-//                Thread thread = new Thread(runnable);
-//                thread.setDaemon(true);
-//                return thread;
-//            }
-//        });
-        this.addToQueue = new AddToQueue(executor);
+        this.addToQueue = addToQueue;
+        this.addToQueue.setExecutorService(executor);
+        
+        this.horaFormatada = new SimpleDateFormat("HH:mm:ss");
+        this.data = Calendar.getInstance().getTime();
+        
         this.executor.execute(this.addToQueue);
-        new AnimationTimer() {
+        this.animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                
+                addDataToSeries();
             }
-        }.start();
-//        ANTIGO (TESTE):
-//        seriesBuffer = new XYChart.Series<String, Double>();
-//        seriesBuffer.setName("Buffer");
-//        seriesBuffer.getData().add(new XYChart.Data<String, Double>(1+"", 4.0));
-//        seriesBuffer.getData().add(new XYChart.Data<String, Double>(3+"", 10.0));
-//        seriesBuffer.getData().add(new XYChart.Data<String, Double>(6+"", 15.0));
-//        seriesBuffer.getData().add(new XYChart.Data<String, Double>(9+"", 8.0));
-//        seriesBuffer.getData().add(new XYChart.Data<String, Double>(12+"", 5.0));
-//        seriesBuffer.getData().add(new XYChart.Data<String, Double>(15+"", 18.0));
-//        seriesBuffer.getData().add(new XYChart.Data<String, Double>(18+"", 15.0));
-//        seriesBuffer.getData().add(new XYChart.Data<String, Double>(21+"", 13.0));
-//        seriesBuffer.getData().add(new XYChart.Data<String, Double>(24+"", 19.0));
-//        seriesBuffer.getData().add(new XYChart.Data<String, Double>(27+"", 21.0));
-//        seriesBuffer.getData().add(new XYChart.Data<String, Double>(30+"", 21.0));
-//        this.chartBuffer.getData().addAll(seriesBuffer);
+        };
+        this.animationTimer.start();
     }
 
     @FXML
     void parar() {
+        this.btnStop.setDisable(true);
         this.main.interromperExecucao();
     }
-
-    public void atualizarUsoBuffer(int valor) {
-//      this.seriesBuffer.getData().add(new XYChart.Data(this.contadorLinhas, valor));
-//      this.chartBuffer.getData().add(seriesBuffer);
-//	this.lblBufferUsado.setText(valor + "");
-    }
     
+    public void pararExecucao() {
+        this.addToQueue.paraDeExecutar();
+        try {
+            executor.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException ex) {
+            System.out.println("Saiu"+ex.getMessage());
+        }
+        this.executor.shutdown();
+
+        if (!executor.isTerminated()) {
+            executor.shutdownNow();
+        }
+        this.animationTimer.stop();
+//        this.addToQueue = null;
+//        this.btnStop = null;
+//        this.chartBuffer = null;
+//        this.contadorLinhas = 0;
+//        this.data = null;
+//        this.executor = null;
+//        this.horaFormatada = null;
+//        this.lblConsumidor = null;
+//        this.lblProdutor = null;
+//        this.main = null;
+//        this.series = null;
+//        this.xAxis = null;
+//        this.yAxis = null;
+    }
+
     public void addDataToSeries() {
         for (int i = 0; i < 20; i++) {
-            if (this.addToQueue.getDataQueue().isEmpty()) break;
-            series.getData().add(new AreaChart.Data(xData++, this.addToQueue.getDataQueue().remove()));
+            if (this.addToQueue.filaVazia()) break;
+            this.series.getData().add(new AreaChart.Data(this.horaFormatada.format(data), this.addToQueue.removeDado()));
+            data = Calendar.getInstance().getTime();
         }
-        if (series.getData().size() > 20) {
-            series.getData().remove(0, series.getData().size() - 20);
+        if (this.series.getData().size() > 20) {
+            this.series.getData().remove(0, series.getData().size() - 20);
         }
-        xAxis.setLowerBound(xData-20);
-        xAxis.setUpperBound(xData-1);
     }
 }

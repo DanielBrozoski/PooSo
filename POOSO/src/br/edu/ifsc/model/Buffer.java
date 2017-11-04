@@ -42,22 +42,6 @@ public class Buffer {
         return -1;
     }
 
-    public void getEstadoBuffer() {
-//		this.lock.lock();
-//		String estadoBuffer = null;
-//		
-//		try {
-//			estadoBuffer = "---------------\n";
-//			for (int i : buffer) {
-//				estadoBuffer += i + "\n";
-//			}
-//			estadoBuffer += "---------------\n";
-//		this.impressora.imprimirEstadoBuffer(estadoBuffer);
-//		} finally {
-//			this.lock.unlock();
-//		}
-    }
-
     public int getUsoBuffer() {
         this.lock.lock();
         int armazenamentoBuffer = 0;
