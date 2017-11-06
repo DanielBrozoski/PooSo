@@ -6,25 +6,25 @@ import javafx.scene.control.TextField;
 
 public class ControladorRootMenu {
 
-	@FXML
-	private TextField txtTamanhoBuffer;
+    @FXML
+    private TextField txtTamanhoBuffer;
 
-	@FXML
-	private TextField txtQtdProdutoresConsumidores;
+    @FXML
+    private TextField txtQtdProdutoresConsumidores;
 
-	private Main main;
-	
-	public void iniciar(Main main) {
-		this.main = main;
-	}
+    private Main main;
 
-	@FXML
-	void iniciarExecucao() {
-		this.main.iniciarRootInterfaceChart(Integer.parseInt(this.txtTamanhoBuffer.getText()));
-		this.main.iniciarRootInterface();
-		this.main.iniciarExecucao(Integer.parseInt(this.txtTamanhoBuffer.getText()),
-				Integer.parseInt(this.txtQtdProdutoresConsumidores.getText()));
-	}
-        
-        /*public boolean validarDados*/
+    public void iniciar(Main main) {
+        this.main = main;
+    }
+
+    @FXML
+    void iniciarExecucao() {
+        this.main.iniciarRootInterfaceChart(Integer.parseInt(this.txtTamanhoBuffer.getText()));
+        this.main.iniciarRootInterface();
+        this.main.iniciarExecucao(Integer.parseInt(this.txtTamanhoBuffer.getText()),
+            Integer.parseInt(this.txtQtdProdutoresConsumidores.getText()));
+    }
+
+    /*public boolean validarDados*/
 }

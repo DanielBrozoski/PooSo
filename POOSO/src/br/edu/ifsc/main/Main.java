@@ -3,10 +3,10 @@ package br.edu.ifsc.main;
 import java.io.IOException;
 
 import br.edu.ifsc.exception.ErroCarregamentoInterfaceException;
+import br.edu.ifsc.model.AddToQueue;
 import br.edu.ifsc.model.Buffer;
 import br.edu.ifsc.model.Consumidor;
 import br.edu.ifsc.model.Impressora;
-import br.edu.ifsc.model.LeitorBuffer;
 import br.edu.ifsc.model.Produtor;
 import br.edu.ifsc.view.ControladorRootMenu;
 import br.edu.ifsc.view.ControladorRootInterface;
@@ -14,11 +14,8 @@ import br.edu.ifsc.view.ControladorRootInterfaceChart;
 import br.edu.ifsc.view.ControladorRootLayout;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -29,39 +26,30 @@ import javafx.scene.layout.BorderPane;
 
 public class Main extends Application {
 
-    private Stage stage;
     private BorderPane rootLayout;
-    private ControladorRootLayout controladorRootLayout;
-    private ControladorRootMenu controladorRootMenu;
     private ControladorRootInterface controladorRootInterface;
     private ControladorRootInterfaceChart controladorRootInterfaceChart;
 
     private Thread[] threads;
+    private Buffer buffer;
 
     @Override
     public void start(Stage primaryStage) {
-        this.stage = primaryStage;
-        this.stage.setTitle("Produtor / Consumidor");
-        this.stage.getIcons().add(new Image("file:resources/images/icon4.png"));
+        primaryStage.setTitle("Produtor / Consumidor");
+        primaryStage.getIcons().add(new Image("file:resources/images/icon4.png"));
 
-        this.stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                Platform.runLater(new Runnable() {
-                    public void run() {
-                        interromperExecucao();
-                        System.exit(0);
-                    }
-                });
-
-            }
+        primaryStage.setOnCloseRequest((WindowEvent event) -> {
+            Platform.runLater(() -> {
+                interromperExecucao();
+                System.exit(0);
+            });
         });
 
-        iniciarRootLayout();
+        iniciarRootLayout(primaryStage);
         iniciarRootMenu();
     }
 
-    public void iniciarRootLayout() {
+    public void iniciarRootLayout(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader();
         
         try {
@@ -69,7 +57,6 @@ public class Main extends Application {
         } catch (MalformedURLException ex) {
             new ErroCarregamentoInterfaceException()
                 .alertarErro("Erro no carregamento da interface:\n" + ex.getMessage());
-//            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
@@ -80,12 +67,11 @@ public class Main extends Application {
         }
 
         Scene scene = new Scene(this.rootLayout);
-        this.stage.setScene(scene);
+        primaryStage.setScene(scene);
 
-        this.controladorRootLayout = loader.getController();
-
-        this.controladorRootLayout.iniciar(this);
-        this.stage.show();
+        ControladorRootLayout controladorRootLayout = loader.getController();
+        controladorRootLayout.iniciar(this);
+        primaryStage.show();
     }
 
     public void iniciarRootMenu() {
@@ -95,7 +81,6 @@ public class Main extends Application {
         } catch (MalformedURLException ex) {
             new ErroCarregamentoInterfaceException()
                 .alertarErro("Erro no carregamento da interface:\n" + ex.getMessage());
-//            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         AnchorPane anchorPane = null;
         try {
@@ -107,9 +92,8 @@ public class Main extends Application {
 
         this.rootLayout.setCenter(anchorPane);
 
-        this.controladorRootMenu = loader.getController();
-
-        this.controladorRootMenu.iniciar(this);
+        ControladorRootMenu controladorRootMenu = loader.getController();
+        controladorRootMenu.iniciar(this);
     }
 
     public void iniciarRootInterface() {
@@ -119,7 +103,6 @@ public class Main extends Application {
         } catch (MalformedURLException ex) {
             new ErroCarregamentoInterfaceException()
                 .alertarErro("Erro no carregamento da interface:\n" + ex.getMessage());
-//            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         AnchorPane anchorPane = null;
         try {
@@ -130,9 +113,7 @@ public class Main extends Application {
         }
 
         this.rootLayout.setCenter(anchorPane);
-
         this.controladorRootInterface = loader.getController();
-
         this.controladorRootInterface.iniciar(this);
     }
 
@@ -143,7 +124,6 @@ public class Main extends Application {
         } catch (MalformedURLException ex) {
             new ErroCarregamentoInterfaceException()
                 .alertarErro("Erro no carregamento da interface:\n" + ex.getMessage());
-//            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         AnchorPane anchorPane = null;
         try {
@@ -152,24 +132,21 @@ public class Main extends Application {
             new ErroCarregamentoInterfaceException()
                 .alertarErro("Erro no carregamento da interface:\n" + e.getMessage());
         }
-
+        
+        this.buffer = new Buffer(tamanhoBuffer);
         this.rootLayout.setRight(anchorPane);
-
-        this.controladorRootInterfaceChart = loader.getController();
-
-        this.controladorRootInterfaceChart.iniciar(this, tamanhoBuffer);
+        ControladorRootInterfaceChart controladorRootInterfaceChart = loader.getController();
+        controladorRootInterfaceChart.iniciar(this, tamanhoBuffer, new AddToQueue(buffer));
+        
+        this.controladorRootInterfaceChart = controladorRootInterfaceChart;
     }
 
     public void iniciarExecucao(int tamanhoBuffer, int qtdProdutoresConsumidores) {
-        Buffer buffer = new Buffer(tamanhoBuffer);
         Consumidor consumidor;
         Produtor produtor;
-        Impressora impressora = new Impressora(this.controladorRootInterface, this.controladorRootInterfaceChart);
-        LeitorBuffer leitorBuffer = new LeitorBuffer(buffer, impressora);
-        threads = new Thread[(qtdProdutoresConsumidores * 2) + 1];
-        int indiceThread = 1;
-
-        threads[0] = new Thread(leitorBuffer);
+        Impressora impressora = new Impressora(this.controladorRootInterface);
+        threads = new Thread[(qtdProdutoresConsumidores * 2)];
+        int indiceThread = 0;
 
         for (int i = 0; i < qtdProdutoresConsumidores; i++) {
             consumidor = new Consumidor(i + 1, buffer, impressora);
@@ -187,10 +164,28 @@ public class Main extends Application {
 
     public void interromperExecucao() {
         if (threads != null) {
-            for (int i = 0; i < threads.length; i++) {
-                threads[i].interrupt();
+            for (Thread thread : threads) {
+                thread.interrupt();
+            }
+            if(this.controladorRootInterfaceChart != null) {
+                this.controladorRootInterfaceChart.pararExecucao();
             }
         }
+    }
+    
+    public void reiniciar() {
+        interromperExecucao();
+        this.buffer = null;
+        this.controladorRootInterface = null;
+        this.threads = null;
+        try{
+            this.rootLayout.getChildren().remove(this.rootLayout.lookup('.anchorPane'));
+        } catch(IndexOutOfBoundsException e) {
+//            Não existe 2º filho
+            System.out.println("Não existe 2º filho");
+        }
+        iniciarRootMenu();
+
     }
 
     public static void main(String[] args) {
