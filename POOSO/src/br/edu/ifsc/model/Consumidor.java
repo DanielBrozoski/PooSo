@@ -40,7 +40,7 @@ public class Consumidor implements Runnable {
                     "$ Consumidor: " + this.pidProdutor + " leu da posição " + indiceVetor + " do buffer.\n");
             } else {
                 this.impressora.imprimirProducao("$ Consumidor: " + this.pidProdutor + "FOI FURTADO.\n");
-                System.exit(1);
+                return;
             }
         }
     }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.input.KeyCodeCombination?>
+
+<MenuBar stylesheets="@../main/main.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ifsc.control.ControladorRootMenuBar">
+   <menus>
+      <Menu mnemonicParsing="false" text="Arquivo">
+         <items>
+            <MenuItem mnemonicParsing="false" onAction="#iniciarNovo" text="Novo">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" text="Log do sistema" visible="false">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#sair" text="Sair">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+         </items>
+      </Menu>
+      <Menu mnemonicParsing="false" text="Sobre">
+         <items>
+            <MenuItem mnemonicParsing="false" onAction="#sobre" text="Produtor/Consumidor">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="H" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
+         </items>
+      </Menu>
+   </menus>
+</MenuBar>
