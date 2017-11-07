@@ -8,10 +8,11 @@ import br.edu.ifsc.model.Buffer;
 import br.edu.ifsc.model.Consumidor;
 import br.edu.ifsc.model.Impressora;
 import br.edu.ifsc.model.Produtor;
-import br.edu.ifsc.view.ControladorRootMenu;
-import br.edu.ifsc.view.ControladorRootInterface;
-import br.edu.ifsc.view.ControladorRootInterfaceChart;
-import br.edu.ifsc.view.ControladorRootLayout;
+import br.edu.ifsc.control.ControladorRootMenu;
+import br.edu.ifsc.control.ControladorRootInterface;
+import br.edu.ifsc.control.ControladorRootInterfaceChart;
+import br.edu.ifsc.control.ControladorRootLayout;
+import br.edu.ifsc.control.ControladorRootMenuBar;
 import java.io.File;
 import java.net.MalformedURLException;
 import javafx.application.Application;
@@ -20,13 +21,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
 public class Main extends Application {
 
-    private BorderPane rootLayout;
+    private ControladorRootLayout controladorRootLayout;
     private ControladorRootInterface controladorRootInterface;
     private ControladorRootInterfaceChart controladorRootInterfaceChart;
 
@@ -36,7 +38,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Produtor / Consumidor");
-        primaryStage.getIcons().add(new Image("file:resources/images/icon4.png"));
+        primaryStage.getIcons().add(new Image("file:resources/images/icone-64.png"));
 
         primaryStage.setOnCloseRequest((WindowEvent event) -> {
             Platform.runLater(() -> {
@@ -46,38 +48,60 @@ public class Main extends Application {
         });
 
         iniciarRootLayout(primaryStage);
+        iniciarRootMenuBar();
         iniciarRootMenu();
+        primaryStage.show();
     }
 
     public void iniciarRootLayout(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader();
         
         try {
-            loader.setLocation(new File("src/br/edu/ifsc/view/RootLayout.fxml").toURI().toURL());//Main.class.getResource("../view/RootLayout.fxml")
+            loader.setLocation(new File("src/br/edu/ifsc/view/RootLayout.fxml").toURI().toURL());
         } catch (MalformedURLException ex) {
             new ErroCarregamentoInterfaceException()
                 .alertarErro("Erro no carregamento da interface:\n" + ex.getMessage());
         }
-
+        BorderPane borderPane = null;
         try {
-            this.rootLayout = (BorderPane) loader.load();
+            borderPane = (BorderPane) loader.load();
+        } catch (IOException e) {
+            new ErroCarregamentoInterfaceException()
+                .alertarErro("Erro no carregamento da interface:\n" + e.getMessage());
+        }
+        
+        this.controladorRootLayout = loader.getController();
+
+        Scene scene = new Scene(borderPane);
+        primaryStage.setScene(scene);
+    }
+    
+    public void iniciarRootMenuBar() {
+        FXMLLoader loader = new FXMLLoader();
+        try {
+            loader.setLocation(new File("src/br/edu/ifsc/view/RootMenuBar.fxml").toURI().toURL());
+        } catch (MalformedURLException ex) {
+            new ErroCarregamentoInterfaceException()
+                .alertarErro("Erro no carregamento da interface:\n" + ex.getMessage());
+        }
+        MenuBar menuBar = null;
+        try {
+            menuBar = (MenuBar) loader.load();
         } catch (IOException e) {
             new ErroCarregamentoInterfaceException()
                 .alertarErro("Erro no carregamento da interface:\n" + e.getMessage());
         }
 
-        Scene scene = new Scene(this.rootLayout);
-        primaryStage.setScene(scene);
+        this.controladorRootLayout.colocarEmCima(menuBar);
 
-        ControladorRootLayout controladorRootLayout = loader.getController();
-        controladorRootLayout.iniciar(this);
-        primaryStage.show();
+        ControladorRootMenuBar controladorRootMenuBar = loader.getController();
+        controladorRootMenuBar.iniciar(this);
     }
 
     public void iniciarRootMenu() {
         FXMLLoader loader = new FXMLLoader();
         try {
-            loader.setLocation(new File("src/br/edu/ifsc/view/RootMenu.fxml").toURI().toURL());//Main.class.getResource("../view/RootMenu.fxml")
+            loader.setLocation(new File("src/br/edu/ifsc/view/RootMenu.fxml").toURI().toURL());
         } catch (MalformedURLException ex) {
             new ErroCarregamentoInterfaceException()
                 .alertarErro("Erro no carregamento da interface:\n" + ex.getMessage());
@@ -90,7 +114,7 @@ public class Main extends Application {
                 .alertarErro("Erro no carregamento da interface:\n" + e.getMessage());
         }
 
-        this.rootLayout.setCenter(anchorPane);
+        this.controladorRootLayout.colocarNoCentro(anchorPane);
 
         ControladorRootMenu controladorRootMenu = loader.getController();
         controladorRootMenu.iniciar(this);
@@ -99,7 +123,7 @@ public class Main extends Application {
     public void iniciarRootInterface() {
         FXMLLoader loader = new FXMLLoader();
         try {
-            loader.setLocation(new File("src/br/edu/ifsc/view/RootInterface.fxml").toURI().toURL());//Main.class.getResource("../view/RootInterface.fxml")
+            loader.setLocation(new File("src/br/edu/ifsc/view/RootInterface.fxml").toURI().toURL());
         } catch (MalformedURLException ex) {
             new ErroCarregamentoInterfaceException()
                 .alertarErro("Erro no carregamento da interface:\n" + ex.getMessage());
@@ -112,7 +136,7 @@ public class Main extends Application {
                 .alertarErro("Erro no carregamento da interface:\n" + e.getMessage());
         }
 
-        this.rootLayout.setCenter(anchorPane);
+        this.controladorRootLayout.colocarNoCentro(anchorPane);
         this.controladorRootInterface = loader.getController();
         this.controladorRootInterface.iniciar(this);
     }
@@ -120,7 +144,7 @@ public class Main extends Application {
     public void iniciarRootInterfaceChart(int tamanhoBuffer) {
         FXMLLoader loader = new FXMLLoader();
         try {
-            loader.setLocation(new File("src/br/edu/ifsc/view/RootInterfaceChart.fxml").toURI().toURL());//Main.class.getResource("../view/RootInterfaceChart.fxml")
+            loader.setLocation(new File("src/br/edu/ifsc/view/RootInterfaceChart.fxml").toURI().toURL());
         } catch (MalformedURLException ex) {
             new ErroCarregamentoInterfaceException()
                 .alertarErro("Erro no carregamento da interface:\n" + ex.getMessage());
@@ -134,7 +158,7 @@ public class Main extends Application {
         }
         
         this.buffer = new Buffer(tamanhoBuffer);
-        this.rootLayout.setRight(anchorPane);
+        this.controladorRootLayout.colocarNaDireita(anchorPane);
         ControladorRootInterfaceChart controladorRootInterfaceChart = loader.getController();
         controladorRootInterfaceChart.iniciar(this, tamanhoBuffer, new AddToQueue(buffer));
         
@@ -170,6 +194,7 @@ public class Main extends Application {
             if(this.controladorRootInterfaceChart != null) {
                 this.controladorRootInterfaceChart.pararExecucao();
             }
+            this.threads = null;
         }
     }
     
@@ -177,13 +202,10 @@ public class Main extends Application {
         interromperExecucao();
         this.buffer = null;
         this.controladorRootInterface = null;
+        this.controladorRootInterfaceChart = null;
         this.threads = null;
-        try{
-            this.rootLayout.getChildren().remove(this.rootLayout.lookup('.anchorPane'));
-        } catch(IndexOutOfBoundsException e) {
-//            Não existe 2º filho
-            System.out.println("Não existe 2º filho");
-        }
+        this.controladorRootLayout.limparNodes();
+        iniciarRootMenuBar();
         iniciarRootMenu();
 
     }

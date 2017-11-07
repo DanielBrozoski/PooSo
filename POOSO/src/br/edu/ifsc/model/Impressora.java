@@ -4,7 +4,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import br.edu.ifsc.interfaces.DriverImpressora;
-import br.edu.ifsc.view.ControladorRootInterface;
+import br.edu.ifsc.control.ControladorRootInterface;
 
 public class Impressora implements DriverImpressora {
 

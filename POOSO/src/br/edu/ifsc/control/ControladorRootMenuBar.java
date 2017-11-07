@@ -1,4 +1,4 @@
-package br.edu.ifsc.view;
+package br.edu.ifsc.control;
 
 import br.edu.ifsc.main.Main;
 import javafx.fxml.FXML;
@@ -7,8 +7,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
+import javafx.stage.Stage;
 
-public class ControladorRootLayout {
+public class ControladorRootMenuBar {
 
     private Main main;
 
@@ -30,9 +31,12 @@ public class ControladorRootLayout {
     @FXML
     void sobre() {
         Alert alert = new Alert(AlertType.INFORMATION);
+        
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("file:resources/images/icone-64.png"));
 
         ImageView imageView = new ImageView();
-        imageView.setImage(new Image("file:resources/images/icon3.png"));
+        imageView.setImage(new Image("file:resources/images/icone-128.png"));
         alert.setGraphic(imageView);
 
         alert.setTitle("O problema...");
@@ -48,8 +52,9 @@ public class ControladorRootLayout {
         alert.showAndWait();
     }
 
-    @FXML
-    void visualizarLog() {
+//    Talvez exista:
+//    @FXML
+//    void visualizarLog() {
 //          Alert alert = new Alert(AlertType.INFORMATION);
 //
 //          ImageView imageView = new ImageView();
@@ -59,5 +64,5 @@ public class ControladorRootLayout {
 //          alert.setTitle("O problema...");
 //          alert.setHeaderText();
 //          alert.setContentText(contentText);
-    }
+//    }
 }

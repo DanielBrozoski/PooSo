@@ -25,7 +25,7 @@ public class AddToQueue implements Runnable {
     
     public void run() {
         try{
-            this.dataQueue.add(this.buffer.getUsoBuffer());//this.buffer.getUsoBuffer()
+            this.dataQueue.add(this.buffer.getUsoBuffer());
             Thread.sleep(998);
             if(executar){
                 this.executor.execute(this);

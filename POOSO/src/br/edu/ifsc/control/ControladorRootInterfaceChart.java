@@ -1,4 +1,4 @@
-package br.edu.ifsc.view;
+package br.edu.ifsc.control;
 
 import br.edu.ifsc.main.Main;
 import br.edu.ifsc.model.AddToQueue;
@@ -14,7 +14,6 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 
 public class ControladorRootInterfaceChart {
 
@@ -23,12 +22,6 @@ public class ControladorRootInterfaceChart {
     
     @FXML
     private Button btnStop;
-
-    @FXML
-    private Label lblProdutor;
-
-    @FXML
-    private Label lblConsumidor;
 
     private NumberAxis xAxis;
     private NumberAxis yAxis;
@@ -92,19 +85,17 @@ public class ControladorRootInterfaceChart {
             executor.shutdownNow();
         }
         this.animationTimer.stop();
-//        this.addToQueue = null;
-//        this.btnStop = null;
-//        this.chartBuffer = null;
-//        this.contadorLinhas = 0;
-//        this.data = null;
-//        this.executor = null;
-//        this.horaFormatada = null;
-//        this.lblConsumidor = null;
-//        this.lblProdutor = null;
-//        this.main = null;
-//        this.series = null;
-//        this.xAxis = null;
-//        this.yAxis = null;
+        this.addToQueue = null;
+        this.btnStop = null;
+        this.chartBuffer = null;
+        this.contadorLinhas = 0;
+        this.data = null;
+        this.executor = null;
+        this.horaFormatada = null;
+        this.main = null;
+        this.series = null;
+        this.xAxis = null;
+        this.yAxis = null;
     }
 
     public void addDataToSeries() {

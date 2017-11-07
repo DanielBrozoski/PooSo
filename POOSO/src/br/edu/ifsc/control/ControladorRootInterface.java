@@ -1,4 +1,4 @@
-package br.edu.ifsc.view;
+package br.edu.ifsc.control;
 
 import br.edu.ifsc.main.Main;
 import javafx.fxml.FXML;

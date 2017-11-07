@@ -4,12 +4,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Buffer {
-    private int tamanhoVetor;
     private int[] buffer;
     private Lock lock;
 
     public Buffer(int tamanhoVetor) {
-        this.tamanhoVetor = tamanhoVetor;
         this.buffer = new int[tamanhoVetor];
         this.lock = new ReentrantLock();
     }
@@ -19,7 +17,7 @@ public class Buffer {
         int index = -1;
 
         try {
-            for (int i = 0; i < tamanhoVetor; i++) {
+            for (int i = 0; i < this.buffer.length; i++) {
                 if (buffer[i] == 0) {
                     buffer[i] = pid;
                     index = i;
@@ -33,7 +31,7 @@ public class Buffer {
     }
 
     public int consomeProduto(int pid) {
-        for (int i = 0; i < tamanhoVetor; i++) {
+        for (int i = 0; i < this.buffer.length; i++) {
             if (buffer[i] == pid) {
                 buffer[i] = 0;
                 return i;
